@@ -1,0 +1,5 @@
+Line x written by Python
+Line y
+Line z
+Line a
+Line b in r+ mode
