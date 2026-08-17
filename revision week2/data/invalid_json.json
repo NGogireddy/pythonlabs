@@ -1,0 +1,13 @@
+{
+    "device_id": "Q-SENSOR-001",
+    "backend": "simulator",
+    "location": "LAB-01"
+    "readings": [
+        0.25,
+        0.81,
+        null,
+        -0.20,
+        1.44,
+        0.36
+    ]
+}
