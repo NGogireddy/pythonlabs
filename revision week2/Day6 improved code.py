@@ -48,17 +48,15 @@ def process_json(data):
 
 # challenge 3
 sensor_file = Path.cwd() / "data" / "sensor_data.json"
+data = ""
 if sensor_file.exists():
     try:
         with open(sensor_file, 'r') as file:
             data = json.load(file)
-    except json.JSONDecodeError as e:
+            process_json(data)
+    except (json.JSONDecodeError, KeyError) as e:
         error_context = InvalidSensorDataError(data)
         print(error_context)
-    try:
-        process_json(data)
-    except KeyError as e:
-        print(e.message)
 else:
     print('Sensor file doesn\'t exist')
 
@@ -77,3 +75,18 @@ if sensor_file2.exists():
             print(f'json {data} in line number: {line_no} is not a valid schema. {error_context}')
 else:
     print("Sensor stream file doesn't exist")
+
+# empty file check
+empty_file = Path.cwd() / "empty_file.txt"
+if empty_file.exists():
+    empty_data = ""
+    try:
+        with open(empty_file, 'r') as file2:
+            empty_data = json.load(file2)
+            process_json(empty_data)
+    except (json.JSONDecodeError, KeyError) as e:
+        print("Exception handle of empty file: ")
+        error_context = InvalidSensorDataError(empty_data)
+        print(error_context)
+else:
+    print('Empty file doesn\'t exist')
