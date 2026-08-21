@@ -41,10 +41,9 @@ def process_data(data):
                     results["valid_readings"].append((reading, result))
                 else:
                     results["invalid_readings"].append((reading, result.message))
+            return results
     except InvalidSensorDataError as e:
         print(e.message)
-
-    return results
 
 
 def process_file(data_file):

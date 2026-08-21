@@ -1481,24 +1481,24 @@ Do not judge success by:
 
 Judge success using the following checklist.
 
-* [ ] I can write `try/except` without looking up the syntax.
-* [ ] I understand when to catch `ValueError`.
-* [ ] I understand the purpose of `else`.
-* [ ] I understand the purpose of `finally`.
-* [ ] I can deliberately raise an exception.
-* [ ] I can explain why broad exception handling can be dangerous.
-* [ ] I can read a text file using `with open()`.
-* [ ] I can write to a file.
-* [ ] I can use `pathlib.Path`.
-* [ ] I can parse JSON.
-* [ ] I can handle malformed JSON.
-* [ ] I can detect missing JSON fields.
-* [ ] I can create a custom exception.
-* [ ] I can separate validation from processing.
-* [ ] I can process valid records while reporting invalid ones.
-* [ ] I deliberately tested failure scenarios.
-* [ ] I wrote tests for important failure cases.
-* [ ] I can explain my code without reading it line by line.
+* [Y] I can write `try/except` without looking up the syntax.
+* [Y] I understand when to catch `ValueError`.
+* [Y] I understand the purpose of `else`.
+* [Y] I understand the purpose of `finally`.
+* [Y] I can deliberately raise an exception.
+* [Y] I can explain why broad exception handling can be dangerous.
+* [Y] I can read a text file using `with open()`.
+* [N] I can write to a file.
+* [Y] I can use `pathlib.Path`.
+* [Y] I can parse JSON.
+* [Y] I can handle malformed JSON.
+* [Y] I can detect missing JSON fields.
+* [Y] I can create a custom exception.
+* [Y] I can separate validation from processing.
+* [Y] I can process valid records while reporting invalid ones.
+* [Y] I deliberately tested failure scenarios.
+* [N] I wrote tests for important failure cases.
+* [Y] I can explain my code without reading it line by line.
 
 ---
 
@@ -1508,18 +1508,18 @@ Score yourself from 1–5.
 
 | Skill              | Score |
 | ------------------ | ----: |
-| `try/except`       |    /5 |
-| `else/finally`     |    /5 |
-| `raise`            |    /5 |
-| File I/O           |    /5 |
-| Context managers   |    /5 |
-| `pathlib`          |    /5 |
-| JSON               |    /5 |
-| Custom exceptions  |    /5 |
-| Input validation   |    /5 |
-| Debugging failures |    /5 |
-| Testing            |    /5 |
-| Code organisation  |    /5 |
+| `try/except`       |   5/5 |
+| `else/finally`     |   5/5 |
+| `raise`            |   5/5 |
+| File I/O           |   3/5 |
+| Context managers   |   4/5 |
+| `pathlib`          |   5/5 |
+| JSON               |   5/5 |
+| Custom exceptions  |   5/5 |
+| Input validation   |   5/5 |
+| Debugging failures |   4/5 |
+| Testing            |   3/5 |
+| Code organisation  |   3/5 |
 
 ### Interpretation
 
@@ -1540,20 +1540,28 @@ Do not rush because the calendar says Week 3.
 At the end of the week, write a short answer to these questions.
 
 ### 1. What surprised me about Python's exception model?
+The features it provide and how gracefully we can handle errors and messages
 
 ### 2. Which exception did I initially misunderstand?
+I was confused between ValueError and TypeError
 
 ### 3. Which syntax now feels automatic?
+try, except, with open(), json.load() are automatic for me now. 
 
 ### 4. Which syntax still requires conscious thought?
+Nothing is bothering me at this moment. 
 
 ### 5. What failure scenario did I discover only because I deliberately broke my program?
+When a function has to return a value and if the flow is not returning anything it automatically returns NoneType
 
 ### 6. How would I design this differently if the input came from a cloud API instead of a local JSON file?
+I need to learn more on this. I will get to it when I integrate streaming data from API's
 
 ### 7. What parts of this week's work resemble enterprise integration?
+The capstone project is resembling enterprise integration. 
 
 ### 8. Where could this pattern appear in a future hybrid quantum/classical system?
+This is the basic that we can expect in quantum computing to validate the input data before processing.
 
 ---
 
@@ -1665,15 +1673,15 @@ How does this week's Python knowledge relate to enterprise/cloud/quantum archite
 
 ### Confidence
 
-Python confidence before Week 2: __/10
+Python confidence before Week 2: 5/10
 
-Python confidence after Week 2: __/10
+Python confidence after Week 2: 6/10
 
 ### GitHub
 
 Repository:
 
-`<paste Week 2 repository URL here>`
+https://github.com/NGogireddy/pythonlabs/tree/main/revision%20week2
 
 ---
 

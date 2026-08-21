@@ -5,7 +5,7 @@ class InvalidSensorDataError(Exception):
 
     def __init__(self, data):
         self.data = data
-        self.message = f'{data} in not a valid schema for sensor data'
+        self.message = f'{data} is not a valid schema for sensor data'
         super().__init__(self.message)
 
 
