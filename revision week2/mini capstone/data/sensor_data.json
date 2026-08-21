@@ -3,7 +3,9 @@
     "backend": "simulator",
     "readings": [
         0.5,
-        -0.2,
+        {
+        "key": "value"
+        },
         null,
         0.9,
         1.2,

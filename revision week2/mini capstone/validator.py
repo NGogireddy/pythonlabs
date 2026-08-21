@@ -1,3 +1,4 @@
+from typing import List
 from exceptions import InvalidSensorDataError, InvalidQuantumReadingError
 
 
@@ -10,7 +11,8 @@ def valid_schema(schema):
     """
 
     if "device_id" in schema and "backend" in schema and "readings" in schema:
-        return True
+        if isinstance(schema["readings"], List):
+            return True
     raise InvalidSensorDataError(schema)
 
 
@@ -27,4 +29,4 @@ def valid_reading(reading):
             return value**2
         return InvalidQuantumReadingError(f"Out of boundary")
     except (ValueError, TypeError):
-        return InvalidQuantumReadingError(reading)
+        return InvalidQuantumReadingError("Invalid Value")
