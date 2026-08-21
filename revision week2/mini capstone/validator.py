@@ -27,4 +27,4 @@ def valid_reading(reading):
             return value**2
         return InvalidQuantumReadingError(f"Out of boundary")
     except (ValueError, TypeError):
-        return InvalidQuantumReadingError(reading)
+        return InvalidQuantumReadingError("Invalid Value")
