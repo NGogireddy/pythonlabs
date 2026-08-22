@@ -40,7 +40,7 @@ def process_data(data):
                 if isinstance(result, float):
                     results["valid_readings"].append((reading, result))
                 else:
-                    results["invalid_readings"].append((reading, result.message))
+                    results["invalid_readings"].append((reading, result))
             return results
     except InvalidSensorDataError as e:
         print(e.message)
