@@ -93,7 +93,7 @@ def updated_valid_reading(reading):
     """
     Validate if the reading is between 0 and 1
     :param reading: string
-    :return: float(reading)
+    :return: float
     :raises: InvalidQuantumReadingError
     """
     try:
@@ -101,7 +101,7 @@ def updated_valid_reading(reading):
     except (ValueError, TypeError):
         raise InvalidQuantumReadingError("Invalid Value")
     if 0 <= value <= 1:
-        return True
+        return value
     raise InvalidQuantumReadingError(f"Out of boundary")
 
 
@@ -159,8 +159,7 @@ def updated_process_reading(sensor_reading):
 
     for reading in sensor_reading["readings"]:
         try:
-            if updated_valid_reading(reading):
-                output["valid_readings"].append((reading, float(reading)**2))
+            output["valid_readings"].append((reading, updated_valid_reading(reading) ** 2))
         except InvalidQuantumReadingError as e:
             output["invalid_readings"].append((reading, e.message))
     return output
