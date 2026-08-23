@@ -1,0 +1,16 @@
+{
+    "device_id": "Q-SENSOR-001",
+    "backend": "simulator"
+    "readings": [
+        0.5,
+        {
+        "key": "value"
+        },
+        null,
+        0.9,
+        1.2,
+        null,
+        -0.8,
+        0.25
+    ]
+}
