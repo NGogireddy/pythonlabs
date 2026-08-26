@@ -1,0 +1,11 @@
+{
+    "experiment_id": "EXP-001",
+    "backend": "simulator",
+    "shots": 1000,
+    "results": [
+        {"state": "00", "count": 482},
+        {"state": "11", "count": 498},
+        {"state": "01", "count": 12},
+        {"state": "10", "count": 8}
+    ]
+}
