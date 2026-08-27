@@ -6,6 +6,10 @@
         {"state": "00", "count": 482},
         {"state": "11", "count": 498},
         {"state": "01", "count": 12},
+        {"states": "01", "count": 12},
+        {"state": "abc", "count": -10},
+        {"state": "def", "counts": 10},
+        {"state": 10, "count": "01"},
         {"state": "10", "count": 8}
     ]
 }
