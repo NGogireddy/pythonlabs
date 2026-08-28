@@ -2,6 +2,10 @@ import json
 from exceptions import InvalidContentError
 
 
+DIVIDER_LINE = "-----------------------------------------------------------"
+HEADER_LINE = "               Summary of the experiment                  "
+
+
 def get_experiment_data(file_path):
     """
     Reads the data from the file path and returns it.
@@ -74,3 +78,29 @@ def process_experiment_data(experiment_data):
         except InvalidContentError as e:
             summary['invalid_results'].append((result, str(e)))
     return summary
+
+
+def generate_report(summary):
+    """
+    Generates a report of the summary created.
+    :param summary:
+    :return: None
+    """
+    if summary:
+        print(DIVIDER_LINE)
+        print(HEADER_LINE)
+        print(DIVIDER_LINE + "\n")
+        print(f'{"Experiment ID":18} : {summary["experiment_id"]}')
+        print(f'{"Total shots":18} : {summary["total_shots"]}')
+        print(f'{"Valid shots":18} : {summary["valid_shots"]}')
+        print(f'{"Unique states":18} : {summary["unique_states"]}')
+        print(f'{"Most likely state":18} : {summary["most_probable_state"]}')
+        probabilities_formatted = [f'{key} -> {value}' for d in summary["probabilities"] for key, value in d.items()]
+        print(f'{"Probabilities":18} :')
+        for line in probabilities_formatted:
+            print('\t\t'+line)
+        invalid_results_formatted = [f'{result} --> {reason}' for result, reason in summary["invalid_results"]]
+        print(f'{"Invalid results":18} :')
+        for line in invalid_results_formatted:
+            print('\t\t'+line)
+        print(DIVIDER_LINE + "\n")

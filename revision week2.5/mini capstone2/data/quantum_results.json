@@ -9,6 +9,8 @@
         {"states": "01", "count": 12},
         {"state": "abc", "count": -10},
         {"state": "def", "counts": 10},
+        {"state": "ghi"},
+        {"count": 10},
         {"state": 10, "count": "01"},
         {"state": "10", "count": 8}
     ]
