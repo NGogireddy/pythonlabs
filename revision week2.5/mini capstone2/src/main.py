@@ -1,6 +1,6 @@
 from pathlib import Path
 from exceptions import InvalidContentError
-from utilities import get_experiment_data, validate_experiment, process_experiment_data
+from utilities import get_experiment_data, validate_experiment, process_experiment_data, generate_report
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 
@@ -14,7 +14,8 @@ def run_app():
         try:
             experiment_data = get_experiment_data(file_path)
             if validate_experiment(experiment_data):
-                print(process_experiment_data(experiment_data))
+                summary = process_experiment_data(experiment_data)
+                generate_report(summary)
         except InvalidContentError as e:
             print(e.message)
 
