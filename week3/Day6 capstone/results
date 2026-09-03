@@ -1,0 +1,10 @@
+[
+    {"state": "00", "count": 482},
+    {"state": "11", "count": 498},
+    {"state": "01", "count": 12},
+    {"state": "10", "count": 8},
+    {"state": "00", "count": 485},
+    {"state": "11", "count": 495},
+    {"state": "01", "count": 15},
+    {"state": "10", "count": 5},
+]
