@@ -697,6 +697,7 @@ def test_invalid_input():
 
 The objective is not perfect memorisation. It is reducing the friction of retrieving these patterns.
 
+| `combinations` | /5 |
 ---
 
 # Week 3 Self-Assessment
@@ -709,7 +710,6 @@ Score yourself from 1–5.
 | `defaultdict` | /5 |
 | `namedtuple` | /5 |
 | `permutations` | /5 |
-| `combinations` | /5 |
 | Choosing the right collection | /5 |
 | Understanding combinatorial growth | /5 |
 | Writing pytest tests | /5 |
