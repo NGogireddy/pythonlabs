@@ -1,0 +1,5 @@
+{"timestamp": "2026-09-09 10:00:00", "experiment_id": "EXP-401", "sensor_reading": "45.2", "status": "OK"},
+{"timestamp": "2026-09-09 10:01:00", "experiment_id": "EXP-401", "sensor_reading": "ERROR", "status": "FAIL"},
+{"timestamp": "2026-09-09 10:02:00", "experiment_id": "EXP-402", "sensor_reading": "112.8", "status": "OK"},
+{"timestamp": "2026-09-09 10:03:00", "experiment_id": "EXP-401", "sensor_reading": "48.5", "status": "OK"},
+{"timestamp": "2026-09-09 10:04:00", "experiment_id": "EXP-402", "sensor_reading": "missing", "status": "OK"},
