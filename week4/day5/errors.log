@@ -1,0 +1,19 @@
+{"timestamp": "2026-09-09 10:01:00", "experiment_id": "EXP-401", "sensor_reading": "ERROR", "status": "FAIL"}
+{"timestamp": "2026-09-09 10:01:00", "experiment_id": "EXP-401", "sensor_reading": "ERROR", "status": "FAIL"}
+{"timestamp": "2026-09-09 10:01:00", "experiment_id": "EXP-401", "sensor_reading": "ERROR", "status": "FAIL"}
+{"timestamp": "2026-09-09 10:01:00", "exp_id": "EXP-401", "sensor_reading": "ERR", "status": "FAIL"}
+{"timestamp": "2026-09-09 10:02:00", "exp_id": "EXP-401", "sensor_reading": "ERR"
+{"timestamp": "2026-09-09 10:03:00", "exp_id": "EXP-401", "status": "OK"}
+{"timestamp": "2026-09-09 10:04:00", "exp_id": "EXP-401", "sensor_reading: "ERR", "status": "OK"}
+{"timestamp": "2026-09-09 10:01:00", "experiment_id": "EXP-401", "sensor_reading": "ERROR", "status": "FAIL"}
+{"timestamp": "2026-09-09 10:04:00", "experiment_id": "EXP-402", "sensor_reading": "missing", "status": "OK"}
+{"timestamp": "2026-09-09 10:01:00", "experiment_id": "EXP-401", "sensor_reading": "ERROR", "status": "FAIL"}
+{"timestamp": "2026-09-09 10:04:00", "experiment_id": "EXP-402", "sensor_reading": "missing", "status": "OK"}
+{"timestamp": "2026-09-09 10:01:00", "exp_id": "EXP-401", "sensor_reading": "ERR", "status": "FAIL"}
+{"timestamp": "2026-09-09 10:02:00", "exp_id": "EXP-401", "sensor_reading": "ERR"
+{"timestamp": "2026-09-09 10:03:00", "exp_id": "EXP-401", "status": "OK"}
+{"timestamp": "2026-09-09 10:04:00", "exp_id": "EXP-401", "sensor_reading: "ERR", "status": "OK"}
+{"timestamp": "2026-09-09 10:01:00", "exp_id": "EXP-401", "sensor_reading": "ERR", "status": "FAIL"}
+{"timestamp": "2026-09-09 10:02:00", "exp_id": "EXP-401", "sensor_reading": "ERR"
+{"timestamp": "2026-09-09 10:03:00", "exp_id": "EXP-401", "status": "OK"}
+{"timestamp": "2026-09-09 10:04:00", "exp_id": "EXP-401", "sensor_reading: "ERR", "status": "OK"}
