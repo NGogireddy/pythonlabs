@@ -1,7 +1,9 @@
 import pytest
 import inspect
 import json
-from pipeline import is_valid_float, log_error_records, get_experiment_data, validate_results, transform_result
+from datetime import datetime
+from pipeline import is_valid_float, log_error_records, get_experiment_data, validate_results, transform_result, \
+    process_stream
 
 
 @pytest.mark.parametrize("value, output", [
@@ -37,7 +39,7 @@ def test_log_error_records(tmp_path):
 
 @pytest.fixture
 def sample_results():
-    rec1 = '{"timestamp": "2026-09-09 10:00:00", "exp_id": "EXP-401", "sensor_reading": "45.2", "status": "OK"},\n'
+    rec1 = '{"timestamp": "2026-09-09 10:00:00", "experiment_id": "EXP-401", "sensor_reading": "45.2", "status": "OK"},\n'
     rec2 = '{"timestamp": "2026-09-09 10:01:00", "exp_id": "EXP-401", "sensor_reading": "ERR", "status": "FAIL"},\n'
     rec3 = '{"timestamp": "2026-09-09 10:02:00", "exp_id": "EXP-401", "sensor_reading": "ERR",\n'
     rec4 = '{"timestamp": "2026-09-09 10:03:00", "exp_id": "EXP-401", "status": "OK"},\n'
@@ -82,3 +84,27 @@ def test_validate_results(sample_results, tmp_path, monkeypatch):
     assert sample_results[4].strip().rstrip(',') in error_lines
 
 
+def test_transform_result(sample_results):
+
+    expected_output = {"experiment_id": "EXP-401", "sensor_reading": float(45.2),
+                       "timestamp": datetime.strptime("2026-09-09 10:00:00", "%Y-%m-%d %H:%M:%S")}
+    result_gen = (result for result in sample_results)
+    validated_stream = validate_results(result_gen)
+    transformed_stream = transform_result(validated_stream)
+
+    result = next(transformed_stream)
+    assert result == expected_output
+
+    remaining_output = list(transformed_stream)
+    assert len(remaining_output) == 0
+
+
+def test_process_stream(sample_results):
+
+    expected_output = {'EXP-401': [1, 45.2, 45.2]}
+    result_gen = (result for result in sample_results)
+    validated_stream = validate_results(result_gen)
+    transformed_stream = transform_result(validated_stream)
+    summary = process_stream(transformed_stream)
+
+    assert expected_output == summary

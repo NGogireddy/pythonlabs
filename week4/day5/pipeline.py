@@ -2,7 +2,7 @@ import inspect
 import json
 from pathlib import Path
 from datetime import datetime
-
+from collections import defaultdict, namedtuple
 
 """
 ## Drill — Trace the Pipeline
@@ -128,12 +128,20 @@ def transform_result(validated_results):
         yield result
 
 
+def process_stream(transformed_results):
+    summary = defaultdict(lambda: [0, 0, 0])
+    for result in transformed_results:
+        summary[result["experiment_id"]][0] += 1
+        summary[result["experiment_id"]][1] += result["sensor_reading"]
+        summary[result["experiment_id"]][2] = summary[result["experiment_id"]][1]/summary[result["experiment_id"]][0]
+    return summary
+
+
 raw_stream = get_experiment_data()
 validated_stream = validate_results(raw_stream)
 transformed_stream = transform_result(validated_stream)
-print(next(transformed_stream))
-print(next(transformed_stream))
-print(next(transformed_stream))
+experiment_summary = process_stream(transformed_stream)
+print(experiment_summary)
 
 """
 Reflection: 
@@ -143,10 +151,19 @@ I couldn't continue with the test cases today. I will resume tomorrow.
 """
 
 """
-Day 5 continued on day6...
+Day 5 assignment continued on day6...
 Reflection: 
-I have updated some of the functions written yesterday and created few methods. I have written the test cases today. 
+I have updated some of the functions written yesterday and created few methods. I have written some test cases today. 
 The positive from today is that I am able to identify the usage of fixture in one of the test cases. I have learnt to 
 write test cases for generator functions. Yesterday, I was doubting myself, but today, I have gained some confidence. 
+For the record I have spent more than 60 minutes today on this work, but was not looking at the timer i.e, no stress. 
 The assignment for day5 is not completed yet, I will resume on day7  
+"""
+
+"""
+Day 5 assignment continued on day7...
+Reflection: 
+I have updated some of the functions written yesterday and created few methods. I have written test cases for 
+transform_result. process_stream and its test cases are also written today. It did not take too much time today. I 
+believe the capstone project is done on Day5 assignment itself. Will review and proceed based to next week. 
 """
