@@ -1,394 +1,972 @@
-# Quantum Learning Blueprint: Week 5
-## Topic: NumPy Foundations — Linear Algebra & Complex Vector Spaces
+# Week 5 --- NumPy Fundamentals: Arrays, Vectorisation & Data Contracts
 
-### Week 5 Blueprint Overview
-This week bridges foundational Python data structures with high-performance numerical computing. You will transition from list-based logic to memory-aligned NumPy operations, focusing heavily on the linear algebra and complex number primitives required for quantum computing (state vectors and unitary operators).
+## Week 5 Goal
 
----
+This week starts **NumPy from the beginning**. No prior NumPy knowledge
+is assumed.
 
-## Day 1: Array Mechanics, Memory Views, and Copies
-* **Focus:** Transition from nested Python lists to contiguous NumPy memory. Understanding views vs. copies to prevent subtle pointer mutation bugs.
-* **Max Time:** 60 minutes
+The goal is to build a correct mental model of: - NumPy `ndarray` -
+shape, dimensions, size, and dtype - indexing and slicing - views versus
+copies - vectorised numerical operations - boolean masks -
+broadcasting - aggregation with axes - numerical data contracts -
+testing numerical code - basic time/memory reasoning
 
-### 1. Learn (15 mins)
-* Fixed-type contiguous memory allocation vs. Python object arrays.
-* Visualising array metadata: `.shape`, `.strides`, `.dtype`, and memory flags.
-* Memory management: The difference between a structural **view** (`.view()`, basic slicing) and a deep **copy** (`.copy()`, advanced indexing).
+By the end of the week, you should be comfortable asking:
 
-### 2. Drill & Implement (25 mins)
-Implement a utility function that safely clones or views an array while verifying memory location safety.
+> **What is my data, what is its shape, what result do I need, and what
+> NumPy operation expresses that result clearly?**
 
-```python
-import numpy as np
+## Pace & Working Rules
 
-def manipulate_array_memory(arr: np.ndarray, structural_change: bool) -> np.ndarray:
-    """
-    Modifies or returns a structural representation of an input array based on safety flags.
-    
-    CONTRACT:
-    - Input:
-        - arr: A non-empty, contiguous 1D or 2D np.ndarray.
-        - structural_change: bool. If True, returns a shallow memory view with a modified shape.
-                             If False, returns a completely isolated deep copy.
-    - Output: Returns a np.ndarray.
-    - Invalid Input / Exceptions:
-        - Raises TypeError if arr is not an instance of np.ndarray.
-        - Raises ValueError if arr is empty (size == 0).
-    - Side-Effects: None. Modifying the output of a deep copy must not mutate the original `arr`.
-    """
-    if not isinstance(arr, np.ndarray):
-        raise TypeError("Input must be a valid NumPy ndarray.")
-    if arr.size == 0:
-        raise ValueError("Cannot process an empty array.")
-        
-    if structural_change:
-        # Return a view flattened if 2D, or expanded if 1D
-        return arr.view()
-    return arr.copy()
+### Daily limit
+
+**Maximum: 1 hour per day.**
+
+If you reach 60 minutes: 1. Stop. 2. Record what you completed. 3.
+Record where you stopped. 4. Continue only where the following day's
+plan explicitly allows it.
+
+The objective is sustainable progress, not maximising daily volume.
+
+### Daily learning template
+
+Every day is self-contained:
+
+1.  **Drill** --- activate existing Python knowledge
+2.  **Learn** --- understand the new NumPy concept
+3.  **Implement** --- write a small piece of code
+4.  **Test** --- write tests while developing
+5.  **Reflect** --- capture what you now understand
+
+### Testing rule
+
+Continue the testing discipline from Week 2.5 and Week 4.
+
+Use: - `pytest` - `pytest.mark.parametrize` where it genuinely improves
+coverage - `pytest.raises` for exception contracts -
+`numpy.testing.assert_allclose` for floating-point results -
+behaviour-focused tests
+
+Do not force parametrisation when a normal test is clearer.
+
+------------------------------------------------------------------------
+
+# Day 1 --- NumPy From Zero: Arrays, Shape, Dimensions & dtype
+
+## Objective
+
+Build your first mental model of a NumPy array.
+
+Understand: - why NumPy exists - what an `ndarray` is - Python list
+versus NumPy array - 1D versus 2D arrays - `.shape` - `.ndim` -
+`.size` - `.dtype` - basic array creation
+
+No advanced NumPy is expected today.
+
+## 1. Drill --- 5--10 minutes
+
+Before looking anything up, predict:
+
+For `[1, 2, 3, 4]`: - number of elements? - dimensions? - shape?
+
+For:
+
+``` text
+1 2 3
+4 5 6
 ```
 
-### 3. Test (15 mins)
-Write a strict test suite validating memory sharing using `np.shares_memory()`.
+predict: - shape - dimensions - number of elements
 
-```python
-import pytest
+What happens with:
+
+``` python
+values = [1, 2, 3]
+values * 2
+```
+
+What would you expect from:
+
+``` python
+import numpy as np
+values = np.array([1, 2, 3])
+values * 2
+```
+
+## 2. Learn --- 15 minutes
+
+Learn:
+
+``` python
 import numpy as np
 
-@pytest.mark.parametrize("shape, structural_change, expected_share", [
-    ((4,), True, True),
-    ((2, 2), False, False),
+values = np.array([1, 2, 3, 4])
+
+values.shape
+values.ndim
+values.size
+values.dtype
+```
+
+Also explore:
+
+``` python
+np.zeros(5)
+np.ones(5)
+np.arange(5)
+np.arange(2, 10, 2)
+```
+
+Create a 2D array and inspect its properties.
+
+Focus on meaning rather than memorisation.
+
+## 3. Implement --- 20 minutes
+
+Create:
+
+``` text
+week5/
+  day1/
+    array_practice.py
+    test_array_practice.py
+```
+
+Implement:
+
+``` python
+describe_array(values)
+```
+
+Return:
+
+``` python
+{
+    "shape": ...,
+    "ndim": ...,
+    "size": ...,
+    "dtype": ...
+}
+```
+
+### Contract
+
+**Input:** Must be a NumPy `ndarray`.
+
+**Output:** Dictionary containing `shape`, `ndim`, `size`, and `dtype`.
+
+**Invalid input:** Decide and document behaviour for non-NumPy input.
+
+**Side effects:** None.
+
+## 4. Test --- 10 minutes
+
+Test: - normal 1D array - normal 2D array - empty array - different
+dtype - invalid input
+
+## 5. Reflect --- 5 minutes
+
+1.  Why is `shape` important?
+2.  What does `ndim` tell you?
+3.  What does `size` tell you?
+4.  Why does `dtype` matter?
+5.  When might a Python list still be more appropriate?
+
+### Day 1 success criterion
+
+You can explain an array's:
+
+**shape → dimensions → size → dtype**
+
+------------------------------------------------------------------------
+
+# Day 2 --- Indexing, Slicing, Views & Copies
+
+## Objective
+
+Learn how to access parts of arrays and understand that a slice can be a
+**view** into the original array.
+
+## 1. Drill --- 5--10 minutes
+
+For:
+
+``` python
+values = np.array([10, 20, 30, 40, 50])
+```
+
+Predict:
+
+``` python
+values[0]
+values[-1]
+values[1:4]
+values[:3]
+values[2:]
+```
+
+For:
+
+``` python
+matrix = np.array([
+    [1, 2, 3],
+    [4, 5, 6],
 ])
-def test_array_memory_isolation(shape, structural_change, expected_share):
-    original = np.arange(np.prod(shape)).reshape(shape)
-    result = manipulate_array_memory(original, structural_change)
-    
-    assert np.shares_memory(original, result) == expected_share
-    
-    # Mutate result to confirm contract side-effect profile
-    result.fill(99)
-    if not expected_share:
-        assert not np.all(original == 99)
-
-def test_array_memory_exceptions():
-    with pytest.raises(TypeError):
-        manipulate_array_memory([], False)
-    with pytest.raises(ValueError):
-        manipulate_array_memory(np.array([]), False)
 ```
 
-### 4. Reflection (5 mins)
-* Why does a basic slice (e.g., `arr[:2]`) create a view rather than a copy? How can this lead to memory leaks or data corruption if unmanaged?
+Predict:
 
----
-
-## Day 2: Vector Spaces, Dot Products, and Custom Exceptions
-* **Focus:** Vector geometry, projection operations, and handling invalid dimensional match properties with explicit custom error trees.
-* **Max Time:** 60 minutes
-
-### 1. Learn (15 mins)
-* Coordinate spaces, vector dimensions, and inner products <ψ|φ>.
-* `np.dot` vs. `np.inner` vs. the `@` operator.
-* Vector projection mechanics and numerical scale bounds.
-
-### 2. Drill & Implement (25 mins)
-Implement a strict geometric vector projecting function.
-
-```python
-import numpy as np
-
-class DimensionalityMismatchError(ValueError):
-    """Raised when spatial dimensions do not align for algebraic operations."""
-
-def project_vector(v: np.ndarray, u: np.ndarray) -> np.ndarray:
-    """
-    Projects vector v onto vector u.
-    
-    CONTRACT:
-    - Input:
-        - v: 1D real-valued float np.ndarray representing the vector to project.
-        - u: 1D real-valued float np.ndarray representing the target basis vector.
-    - Output: A 1D float np.ndarray representing the projection component.
-    - Invalid Input / Exceptions:
-        - Raises DimensionalityMismatchError if v.shape != u.shape.
-        - Raises ZeroDivisionError if u is a zero vector (norm is 0).
-    - Side-Effects: None.
-    """
-    if v.ndim != 1 or u.ndim != 1:
-        raise ValueError("Vectors must be 1-dimensional.")
-    if v.shape != u.shape:
-        raise DimensionalityMismatchError(f"Shape mismatch: {v.shape} vs {u.shape}")
-        
-    u_norm_sq = np.dot(u, u)
-    if np.isclose(u_norm_sq, 0.0, atol=1e-15):
-        raise ZeroDivisionError("Cannot project onto a zero-magnitude vector.")
-        
-    return (np.dot(v, u) / u_norm_sq) * u
+``` python
+matrix[0]
+matrix[:, 1]
+matrix[1:, :2]
 ```
 
-### 3. Test (15 mins)
-Use `pytest.approx` or `np.testing` variants to assert float alignments.
+## 2. Learn --- 15 minutes
 
-```python
-import pytest
-import numpy as np
+Learn: - integer indexing - negative indexing - slicing - row/column
+selection - `:` notation - views - copies
 
-def test_projection_orthogonal():
-    v = np.array([1.0, 0.0])
-    u = np.array([0.0, 1.0])
-    result = project_vector(v, u)
-    np.testing.assert_allclose(result, [0.0, 0.0], atol=1e-15)
+Experiment by modifying a slice and observing whether the original
+changes.
 
-def test_projection_errors():
-    with pytest.raises(DimensionalityMismatchError):
-        project_vector(np.array([1.0, 2.0]), np.array([1.0]))
-        
-    with pytest.raises(ZeroDivisionError):
-        project_vector(np.array([1.0, 2.0]), np.array([0.0, 0.0]))
+Then investigate `.copy()`.
+
+Key lesson:
+
+> **Selecting part of an array and creating an independent copy are not
+> always the same operation.**
+
+## 3. Implement --- 20 minutes
+
+Create:
+
+``` text
+week5/
+  day2/
+    slicing_practice.py
+    test_slicing_practice.py
 ```
 
-### 4. Reflection (5 mins)
-* Why should you never use raw equality operators (`==`) when testing floating-point array products? What does `atol` vs `rtol` signify?
+Implement:
 
----
-
-## Day 3: Matrices as Linear Transformations
-* **Focus:** Matrix transformations, dimensional mapping, and checking matrix attributes (invertibility, rank).
-* **Max Time:** 60 minutes
-
-### 1. Learn (15 mins)
-* Linear maps, transformation matrices, and composition via matrix multiplication.
-* Matrix rank, determinants, and properties of invertibility (`np.linalg.det`, `np.linalg.matrix_rank`).
-* Broad-scale performance effects of multi-matrix chained dot products (`np.linalg.multi_dot`).
-
-### 2. Drill & Implement (25 mins)
-
-```python
-import numpy as np
-
-def apply_linear_transform(matrix: np.ndarray, vector: np.ndarray) -> np.ndarray:
-    """
-    Applies a square matrix linear transformation to a given vector spatial point.
-    
-    CONTRACT:
-    - Input:
-        - matrix: 2D square float np.ndarray of shape (N, N).
-        - vector: 1D float np.ndarray of shape (N,).
-    - Output: 1D float np.ndarray of shape (N,).
-    - Invalid Input / Exceptions:
-        - Raises ValueError if matrix is not 2D square or vector shape does not match.
-        - Raises LinAlgError if the matrix is singular (rank < N).
-    - Side-Effects: None.
-    """
-    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
-        raise ValueError("Transformation matrix must be 2D and square.")
-    if vector.ndim != 1 or matrix.shape[1] != vector.shape[0]:
-        raise ValueError("Vector dimension must match matrix column count.")
-        
-    rank = np.linalg.matrix_rank(matrix)
-    if rank < matrix.shape[0]:
-        raise np.linalg.LinAlgError("Transformation matrix is singular; configuration loses rank.")
-        
-    return matrix @ vector
+``` python
+first_n_rows(matrix, n)
 ```
 
-### 3. Test (15 mins)
+### Contract
 
-```python
-import pytest
-import numpy as np
+**Input:** - 2D NumPy `ndarray` - non-negative integer `n`
 
-def test_valid_transform():
-    matrix = np.array([[2.0, 0.0], [0.0, 3.0]])
-    vector = np.array([1.0, 1.0])
-    expected = np.array([2.0, 3.0])
-    np.testing.assert_array_equal(apply_linear_transform(matrix, vector), expected)
+**Output:** First `n` rows.
 
-def test_singular_matrix_throws():
-    singular_matrix = np.array([[1.0, 2.0], [2.0, 4.0]]) # Linearly dependent rows
-    vector = np.array([1.0, 2.0])
-    with pytest.raises(np.linalg.LinAlgError):
-        apply_linear_transform(singular_matrix, vector)
+Decide and document whether the result is a view or copy.
+
+Consider: - `n = 0` - `n = 1` - `n` smaller than row count - `n` larger
+than row count - empty matrix - invalid `n` - 1D input
+
+## 4. Test --- 10 minutes
+
+Test returned values and your documented view/copy contract.
+
+Also test invalid inputs.
+
+## 5. Reflect --- 5 minutes
+
+1.  Why are views useful?
+2.  Why can views be dangerous?
+3.  When would you deliberately request a copy?
+4.  Why can unnecessary copies matter for large arrays?
+
+### Day 2 success criterion
+
+You can explain whether your operation returns shared data or
+independent data.
+
+------------------------------------------------------------------------
+
+# Day 3 --- Vectorisation, Element-wise Operations & Boolean Masks
+
+## Objective
+
+Learn to express numerical work as array operations rather than manually
+iterating through every element.
+
+Also learn boolean masks.
+
+## 1. Drill --- 5--10 minutes
+
+For `[1, 2, 3, 4]`, describe the Python-loop approach for doubling every
+value.
+
+Then ask how the same operation could be expressed with a NumPy array.
+
+Predict:
+
+``` python
+values = np.array([0.2, 0.7, 0.4, 0.9])
+
+values > 0.5
 ```
 
-### 4. Reflection (5 mins)
-* What is the computational complexity difference between computing a matrix inverse outright versus resolving transformations via vector-matrix execution chains?
+And:
 
----
-
-## Day 4: Introduction to Complex Spaces & Bra-Ket Notation
-* **Focus:** Complex array operations, the Hermitian conjugate (conjugate transpose), and complex magnitude extraction.
-* **Max Time:** 60 minutes
-
-### 1. Learn (15 mins)
-* Native complex dtypes in NumPy (`np.complex64`, `np.complex128`).
-* Accessing real and imaginary parts using `.real` and `.imag`.
-* The Hermitian Conjugate (Adjoint operator ✝): A† = (A*)^T. Note: `.T` on complex matrices only transposes; it does *not* conjugate.
-
-### 2. Drill & Implement (25 mins)
-
-```python
-import numpy as np
-
-def hermitian_conjugate(matrix: np.ndarray) -> np.ndarray:
-    """
-    Computes the Hermitian conjugate (adjoint) of a complex-valued matrix.
-    
-    CONTRACT:
-    - Input:
-        - matrix: 2D complex or float np.ndarray.
-    - Output: 2D complex np.ndarray representing the conjugate transpose.
-    - Invalid Input / Exceptions:
-        - Raises ValueError if matrix is not 2D.
-    - Side-Effects: None.
-    """
-    if matrix.ndim != 2:
-        raise ValueError("Hermitian conjugate requires a 2D matrix.")
-    
-    # Conjugate elements and transpose structurally
-    return matrix.conj().T
+``` python
+values[values > 0.5]
 ```
 
-### 3. Test (15 mins)
+## 2. Learn --- 15 minutes
 
-```python
-import pytest
-import numpy as np
+Learn: - element-wise arithmetic - array/scalar operations -
+comparisons - boolean arrays - boolean masks - why vectorisation is
+useful - why vectorisation is not automatically the answer to every
+problem
 
-@pytest.mark.parametrize("input_matrix, expected_output", [
-    (
-        np.array([[1+1j, 2-3j], [4j, 5]]), 
-        np.array([[1-1j, -4j], [2+3j, 5]])
-    ),
+Explore:
+
+``` python
+values * 2
+values + 10
+values / 2
+values > 0.5
+values[values > 0.5]
+```
+
+Mental shift:
+
+``` text
+Python loop:
+  take one value
+  calculate
+  repeat
+
+NumPy:
+  describe the operation over the array
+```
+
+## 3. Implement --- 20 minutes
+
+Create:
+
+``` text
+week5/
+  day3/
+    vectorisation.py
+    test_vectorisation.py
+```
+
+Implement:
+
+``` python
+normalise_values(values, minimum, maximum)
+```
+
+Map `[minimum, maximum]` to `[0, 1]`.
+
+### Contract
+
+**Input:** - 1D numeric NumPy array - `minimum` - `maximum`
+
+**Rules:** - `minimum` must be less than `maximum` - no Python `for`
+loop - return a NumPy array - do not mutate input
+
+Decide/document behaviour for: - empty array - negative values -
+floating-point values - `minimum == maximum` - invalid input
+
+## 4. Test --- 10 minutes
+
+Test: - normal values - minimum maps to 0 - maximum maps to 1 -
+intermediate values - negative values - floating-point values - empty
+array according to contract - invalid range
+
+Use:
+
+``` python
+numpy.testing.assert_allclose
+```
+
+## 5. Reflect --- 5 minutes
+
+1.  What does vectorisation mean in your own words?
+2.  Why can it be faster than a Python loop?
+3.  Does vectorised automatically mean better?
+4.  What is a boolean mask?
+5.  What does `values[mask]` mean conceptually?
+
+### Day 3 success criterion
+
+You can recognise when a numerical loop can naturally become an array
+operation.
+
+------------------------------------------------------------------------
+
+# Day 4 --- Broadcasting & Aggregation
+
+## Objective
+
+Understand: - broadcasting - compatible shapes - aggregation - `sum` -
+`mean` - `min` - `max` - `axis`
+
+## 1. Drill --- 5--10 minutes
+
+Consider:
+
+``` python
+matrix = np.array([
+    [1, 2, 3],
+    [4, 5, 6],
 ])
-def test_hermitian_conjugate(input_matrix, expected_output):
-    result = hermitian_conjugate(input_matrix)
-    np.testing.assert_array_equal(result, expected_output)
+
+offset = np.array([10, 20, 30])
 ```
 
-### 4. Reflection (5 mins)
-* Why is a standard `.T` transpose operation insufficient when processing linear operations on complex quantum state amplitudes?
+Predict:
 
----
-
-## Day 5: Unitary Matrices and State Normalisation
-* **Focus:** Verifying preservation of probability amplitudes within quantum states via Unitary operators.
-* **Max Time:** 60 minutes
-
-### 1. Learn (15 mins)
-* Unitary matrix definitions: U†U = UU† = I.
-* Inner products of complex state vectors and preservation of the L2 norm (Σ|c_i|^2 = 1).
-* Using `np.eye` to test against standard coordinate identity frames.
-
-### 2. Drill & Implement (25 mins)
-
-```python
-import numpy as np
-
-def is_unitary_operator(matrix: np.ndarray, tolerance: float = 1e-12) -> bool:
-    """
-    Verifies if a complex square matrix behaves as a valid Unitary operator.
-    
-    CONTRACT:
-    - Input:
-        - matrix: 2D square complex/float np.ndarray.
-        - tolerance: float boundary window evaluating identity differences.
-    - Output: bool specifying whether structural criteria matched.
-    - Invalid Input / Exceptions:
-        - Raises ValueError if matrix properties are asymmetric or non-square.
-    - Side-Effects: None.
-    """
-    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
-        raise ValueError("Operator must be a 2D square matrix.")
-        
-    n = matrix.shape[0]
-    identity = np.eye(n, dtype=complex)
-    
-    # Compute U_dagger * U
-    adjoint = matrix.conj().T
-    product = adjoint @ matrix
-    
-    return bool(np.allclose(product, identity, atol=tolerance))
+``` python
+matrix + offset
 ```
 
-### 3. Test (15 mins)
+Why might it work?
 
-```python
-import pytest
-import numpy as np
+Now consider:
 
-def test_unitary_hadamard():
-    # 1/sqrt(2) * [[1, 1], [1, -1]]
-    hadamard = (1 / np.sqrt(2)) * np.array([[1.0, 1.0], [1.0, -1.0]], dtype=complex)
-    assert is_unitary_operator(hadamard)
-
-def test_non_unitary():
-    invalid_matrix = np.array([[1.0, 2.0], [3.0, 4.0]], dtype=complex)
-    assert not is_unitary_operator(invalid_matrix)
+``` python
+offset = np.array([10, 20])
 ```
 
-### 4. Reflection (5 mins)
-* Why do physical quantum gates need to be strictly unitary? What happens to the probability profile of a state vector if it is multiplied by a non-unitary matrix?
+Would the operation work? Why?
 
----
+## 2. Learn --- 15 minutes
 
-## Day 6: Capstone Project — State Vector Simulator Primitives
-* **Focus:** Putting it all together. Build a non-prescriptive, modular framework validating execution chains of state vectors processed via quantum operator gates.
-* **Max Time:** 60 minutes
+Learn the basic idea of broadcasting:
 
-### Capstone Requirements
-Build a small engine that handles **Quantum State Vector Operations**. 
+> NumPy can align compatible shapes so an operation can be applied
+> without explicitly creating repeated data.
 
-1. **State Construction & Normalisation**: Accepting arbitrary complex vectors, validating properties, and formatting them into validated complex state configurations with unit probability (||ψ||_2 = 1).
-2. **Gate Registration**: Storing known valid transformations (like Pauli-X, Pauli-Z, or Hadamard matrices).
-3. **Execution Pipeline**: Applying a sequence of transformations to a state vector while raising precise exceptions if dimensional alignment fails or unitarity is broken.
+Explore:
 
-#### Architectural Constraints (Strictly Enforced)
-* No artificial abstractions or forcing of unnecessary design patterns. Keep objects clear, functions modular, and types exact.
-* Implement custom error boundaries for domain errors (e.g., `InvalidStateError`, `NonUnitaryOperatorError`).
+``` python
+np.sum(matrix)
+np.sum(matrix, axis=0)
+np.sum(matrix, axis=1)
 
-```python
-# Save as quantum_simulator.py (or keep in a local execution scratchpad)
-# Implement the internal architectures yourself based on the specifications above.
+np.mean(matrix)
+np.min(matrix)
+np.max(matrix)
 ```
 
----
+Mental model for a 2D array: - `axis=0` → operate down rows, producing
+one result per column - `axis=1` → operate across columns, producing one
+result per row
 
-## Day 7: Engineering Judgment, Memory Profiles, & Optimization
-* **Focus:** Deep evaluation of the Day 6 Capstone system. Focus on performance tracing, precision boundaries, and code refactoring.
-* **Max Time:** 60 minutes
+Verify this with small arrays instead of only memorising it.
 
-### 1. Test Review & Exhaustive Matrix Coverage (20 mins)
-Review your test suites from the week. Ensure your capstone has 100% mutation test coverage using complex states. Add comprehensive edge cases for multi-step processing:
-* What happens when applying 10 consecutive operations? Does floating-point error accumulate?
-* Implement a test tracking identity loop properties (e.g., applying the Pauli-X gate twice should return the exact starting state).
+## 3. Implement --- 20 minutes
 
-### 2. Memory & Copy Analysis (20 mins)
-Profile your pipeline's memory efficiency. Look closely at how arrays are modified using the following code snippets:
+Create:
 
-```python
-# Memory Profile Diagnostic Snippet
-import numpy as np
-import sys
-
-state = np.array([1.0+0j, 0.0+0j], dtype=np.complex128)
-print(f"State base reference pointer share: {state.base}")
-print(f"Byte profile tracking size: {state.nbytes} bytes")
+``` text
+week5/
+  day4/
+    aggregation.py
+    test_aggregation.py
 ```
-* Walk through every line of your execution engine. Are you creating new array allocations inside your loop (`matrix @ state` creates a new array allocation each time)? 
-* Could you use pre-allocated output buffers (`np.dot(matrix, state, out=buffer_space)`) to optimize execution if this were run millions of times?
 
-### 3. Engineering Judgment Reflection (20 mins)
-Document answers to the following system engineering design trade-offs:
-* **Precision Trade-off**: When should a simulator choose `np.complex64` (single precision) over `np.complex128` (double precision)? Analyze this from the perspective of cache locality vs. deep circuit floating-point drift.
-* **Architecture Critique**: If your simulator needs to scale from 1 qubit to 20 qubits, what happens to memory scaling when using dense matrices? At what point does storing state amplitudes as a dense 1D NumPy array become a structural bottleneck?
+Implement:
 
----
+``` python
+column_statistics(matrix)
+```
 
-## Progress Sign-off
-* [ ] Day 1 Complete
-* [ ] Day 2 Complete
-* [ ] Day 3 Complete
-* [ ] Day 4 Complete
-* [ ] Day 5 Complete
-* [ ] Day 6 Capstone Operational
-* [ ] Day 7 Memory Profiles and Code Audited
+Return the mean of each column.
+
+### Contract
+
+**Input:** 2D numeric NumPy array.
+
+**Output:** 1D NumPy array containing column means.
+
+Explicitly decide behaviour for: - empty arrays - zero-row arrays -
+one-row arrays - one-column arrays - negative values - invalid
+dimensionality - non-numeric data
+
+Do not manually loop over columns.
+
+## 4. Test --- 10 minutes
+
+Test: - normal 2D matrix - single row - single column - negative
+values - floating-point values - empty input according to contract -
+invalid dimensionality
+
+## 5. Reflect --- 5 minutes
+
+1.  What does `axis=0` mean for a 2D array?
+2.  What does `axis=1` mean?
+3.  Why did broadcasting work with a length-3 array?
+4.  Why did length-2 create a shape problem?
+5.  When should shape mismatch make you reconsider the data model?
+
+### Day 4 success criterion
+
+You can reason about:
+
+**input shape → operation → output shape**
+
+------------------------------------------------------------------------
+
+# Day 5 --- Numerical Contracts, Validation & Testing
+
+## Objective
+
+Bring the engineering discipline from Week 2.5 and Week 4 into numerical
+programming.
+
+Main lesson:
+
+> Numerical code needs explicit contracts just as much as application
+> code does.
+
+## 1. Drill --- 10 minutes
+
+Before coding, define the contract for:
+
+``` python
+calculate_state_statistics(values)
+```
+
+Write down: - Input - Output - Valid input - Invalid input -
+Exceptions - Shape - dtype - Empty input behaviour - Side effects
+
+## 2. Learn --- 10--15 minutes
+
+Review: - shape assumptions - dtype assumptions - floating-point
+comparison - empty-array behaviour - separating validation from
+calculation - why implicit numerical assumptions can become production
+defects
+
+Think about the difference between:
+
+> "This works for the example."
+
+and:
+
+> "This function has a defined contract."
+
+## 3. Implement --- 20 minutes
+
+Create:
+
+``` text
+week5/
+  day5/
+    statistics.py
+    test_statistics.py
+```
+
+Implement:
+
+``` python
+calculate_state_statistics(values)
+```
+
+Return:
+
+``` python
+{
+    "count": ...,
+    "mean": ...,
+    "minimum": ...,
+    "maximum": ...
+}
+```
+
+Use a **1D numeric NumPy array** as input.
+
+Explicitly define behaviour for: - normal values - one value - negative
+values - floating-point values - empty array - wrong dimensionality -
+non-numeric input
+
+Where practical, keep validation and calculation logically separated.
+
+## 4. Test --- 10 minutes
+
+Test: - normal array - single element - negative values - floating-point
+values - empty input - invalid dimension - invalid type
+
+Use `numpy.testing.assert_allclose` for floating-point results.
+
+## 5. Reflect --- 5 minutes
+
+1.  What guarantees does your function provide?
+2.  Which assumptions are explicit?
+3.  Which boundary conditions were dangerous when unspecified?
+4.  Why should validation be deliberate?
+5.  What would make this function safer for another engineer to use?
+
+### Day 5 success criterion
+
+You can write a numerical function contract before writing its
+implementation.
+
+------------------------------------------------------------------------
+
+# Day 6 --- Capstone: Quantum Measurement Statistics
+
+## Objective
+
+Build a small, production-shaped numerical component.
+
+This is **not production-sized**.
+
+The purpose is to naturally combine the week's concepts without
+artificially forcing every NumPy feature into the solution.
+
+## Problem
+
+Imagine simulated quantum measurement data.
+
+Each experiment produces a 1D NumPy array of numerical measurement
+values.
+
+You receive multiple experiments and need combined statistics.
+
+Example:
+
+``` python
+[
+    np.array([0.1, 0.2, 0.3]),
+    np.array([0.4, 0.5, 0.6]),
+    np.array([0.7, 0.8, 0.9]),
+]
+```
+
+Calculate:
+
+``` python
+{
+    "experiment_count": ...,
+    "measurement_count": ...,
+    "mean": ...,
+    "minimum": ...,
+    "maximum": ...
+}
+```
+
+## Input Contract
+
+The input is an iterable of 1D NumPy arrays.
+
+You must decide and document: - Are zero experiments allowed? - Are
+empty measurement arrays allowed? - Must every experiment have the same
+number of measurements? - Are NaN values allowed? - Are infinite values
+allowed? - Are integer arrays allowed? - Are floating-point arrays
+allowed? - What happens for non-array input? - What happens for a 2D
+array where a 1D array is expected? - What happens if experiment lengths
+differ?
+
+Do not silently invent behaviour.
+
+## Output Contract
+
+The output contains: - number of experiments - total number of
+measurements - combined mean - combined minimum - combined maximum
+
+Define numeric behaviour clearly enough that a caller knows what to
+expect.
+
+## Concepts
+
+### Must use
+
+-   NumPy arrays
+-   vectorised numerical operations
+-   NumPy aggregation
+-   explicit input validation
+-   pytest
+-   numerical assertions
+
+### Consider using
+
+-   `np.asarray`
+-   boolean masks if required by your contract
+-   `np.concatenate`
+-   `np.mean`
+-   `np.min`
+-   `np.max`
+
+### Do not use unless justified
+
+-   classes
+-   inheritance
+-   pandas
+-   external libraries
+-   unnecessary abstractions
+-   manual element-by-element loops
+
+## Acceptance Criteria
+
+Test appropriate cases such as: - normal multiple experiments - one
+experiment - negative values - floating-point values - empty outer
+input - invalid dimensionality - inconsistent lengths if your contract
+rejects them - invalid/non-numeric input according to your contract -
+any special NaN/inf policy you define
+
+Tests should verify **behaviour**, not implementation details.
+
+## Timebox
+
+**Maximum: 60 minutes.**
+
+If unfinished: - stop - record what remains - do not extend the session
+
+Do not make the solution production-complete.
+
+## Important
+
+Do **not** design the architecture before starting.
+
+First understand: 1. input 2. output 3. constraints 4. acceptance
+criteria
+
+Then make your own design decisions.
+
+Your architecture will be reviewed after implementation.
+
+## Reflection
+
+1.  What is the input contract?
+2.  What is the output contract?
+3.  Where does validation happen?
+4.  Where does numerical processing happen?
+5.  Where is data materialised?
+6.  Are unnecessary copies created?
+7.  What happens with 10 experiments?
+8.  What happens with 10,000 experiments?
+9.  What happens if each experiment contains 1 million measurements?
+10. What is likely to become the dominant memory cost?
+11. What would you change before production?
+
+------------------------------------------------------------------------
+
+# Day 7 --- Test, Refactor & Engineering Review
+
+## Objective
+
+No new NumPy feature today.
+
+Turn:
+
+> "It works."
+
+into:
+
+> "I understand why it works, what it guarantees, and how it will behave
+> as it grows."
+
+## 1. Drill --- 10 minutes
+
+Review the capstone before changing anything.
+
+Look for: - unclear input contract - unclear output contract -
+unnecessary validation - mixed validation/calculation responsibilities -
+unnecessary materialisation - unnecessary copies - manual loops -
+unclear naming - duplicated logic - hidden assumptions - tests coupled
+to implementation - missing edge cases - weak floating-point assertions
+
+Do not immediately rewrite.
+
+## 2. Test Review --- 10 minutes
+
+Review: - behaviour coverage - edge cases - floating-point comparisons -
+useful parametrisation - test isolation - invalid-input coverage
+
+## 3. Refactor --- 20 minutes
+
+Make **2--4 meaningful improvements**.
+
+Do not rewrite the project.
+
+For each change record:
+
+``` text
+Before:
+Problem:
+After:
+Why:
+```
+
+Focus on: - clearer contracts - separation of validation/calculation -
+simpler NumPy expression - fewer unnecessary copies - clearer tests -
+improved naming - clearer exceptions - removal of unnecessary code
+
+## 4. Performance Review --- 10 minutes
+
+Think through:
+
+``` text
+10 experiments
+1,000 experiments
+10,000 experiments
+```
+
+and:
+
+``` text
+10 measurements
+10,000 measurements
+1,000,000 measurements
+```
+
+Ask: 1. What is the computational complexity? 2. What is the memory
+complexity? 3. Where are arrays copied? 4. Where is data materialised?
+5. Which operation dominates? 6. What happens if the dataset becomes too
+large for memory?
+
+No large benchmark is required.
+
+## 5. Final Week 5 Self-Assessment
+
+Score yourself from **1--5**:
+
+  Area                                Score
+  --------------------------------- -------
+  NumPy array fundamentals               /5
+  Shape and dimensional reasoning        /5
+  Indexing and slicing                   /5
+  Views and copies                       /5
+  Vectorisation                          /5
+  Boolean masks                          /5
+  Broadcasting                           /5
+  Numerical aggregation                  /5
+  Data contracts                         /5
+  Test quality                           /5
+  Floating-point testing                 /5
+  Performance awareness                  /5
+  Engineering judgement                  /5
+  Refactoring                            /5
+
+Score based on how confidently you could explain and reproduce the
+concepts, not simply whether you completed the exercises.
+
+------------------------------------------------------------------------
+
+# Week 5 Gate --- Before Moving to Week 6
+
+You should be able to explain and demonstrate:
+
+## NumPy Fundamentals
+
+-   `ndarray`
+-   why NumPy is useful
+-   creating arrays
+-   1D and 2D arrays
+-   `shape`
+-   `ndim`
+-   `size`
+-   `dtype`
+
+## Indexing & Memory
+
+-   indexing
+-   slicing
+-   row/column selection
+-   why a slice can be a view
+-   when a copy may be necessary
+-   why unnecessary copies matter
+
+## Vectorisation
+
+-   element-wise arithmetic
+-   comparisons
+-   boolean masks
+-   vectorised operations
+-   why vectorisation can improve performance
+-   why vectorisation is not automatically appropriate everywhere
+
+## Broadcasting
+
+-   what broadcasting means
+-   compatible shapes
+-   shape mismatch
+-   why shape reasoning matters
+
+## Aggregation
+
+-   `sum`
+-   `mean`
+-   `min`
+-   `max`
+-   `axis`
+-   output shape after aggregation
+
+## Engineering
+
+-   numerical data contracts
+-   explicit shape assumptions
+-   explicit dtype assumptions
+-   empty-input behaviour
+-   invalid-input behaviour
+-   separation of validation and calculation
+-   avoiding hidden side effects
+-   thinking about copies and materialisation
+
+## Testing
+
+-   testing while developing
+-   `pytest`
+-   `pytest.mark.parametrize`
+-   `pytest.raises`
+-   `numpy.testing.assert_allclose`
+-   edge cases
+-   invalid inputs
+-   behaviour versus implementation testing
+
+## Performance
+
+-   why NumPy arrays can be preferable to Python lists for numerical
+    workloads
+-   basic time/memory reasoning
+-   recognising unnecessary copies
+-   recognising materialisation
+-   thinking about scaling
+
+------------------------------------------------------------------------
+
+# Connection to the Quantum Computing Blueprint
+
+This week begins the Numerical Python and Mathematics portion of the
+learning roadmap.
+
+The intended sequence is:
+
+``` text
+Week 5 → NumPy fundamentals
+Week 6 → Linear algebra
+Week 7 → Complex numbers & trigonometry
+Week 8 → Visualisation + matrix/eigenvector project
+```
+
+NumPy is therefore not being learned as an isolated library. It becomes
+the numerical foundation for later work involving: - vectors -
+matrices - complex numbers - quantum states - linear algebra - quantum
+simulation
+
+------------------------------------------------------------------------
+
+# Week 5 Principle
+
+Do not start with:
+
+> "Which NumPy function should I use?"
+
+Start with:
+
+> **What is my data?**
+
+> **What is its shape?**
+
+> **What result do I need?**
+
+> **What operation expresses that result most clearly?**
+
+That reasoning habit is more important than memorising NumPy syntax.
