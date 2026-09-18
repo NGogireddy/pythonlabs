@@ -1,3 +1,8 @@
+import numpy as np
+from pathlib import Path
+from collections import defaultdict
+
+
 """
 ## Problem
 
@@ -22,7 +27,6 @@ Calculate:
     "maximum": ...
 }
 """
-import path
 
 """
 ## Input Contract
@@ -56,21 +60,6 @@ The output contains:
 Any experiment results that are not 1D np arrays of type int/float will be discarded. Invalid experiments are not logged
 """
 
-import numpy as np
-from pathlib import Path
-from collections import defaultdict
-
-arr = np.array([1, -2, 0])
-out = np.array([4, np.nan])
-empty = np.empty((0))
-print(out.dtype)
-out = np.concatenate((out, arr))
-print(out)
-
-out = np.concatenate((out, empty))
-print(out)
-print(out[out > 0])
-
 
 # Generator to read the lines in each file and return it
 def read_experiment_results():
@@ -88,7 +77,7 @@ def is_valid_experiment(result):
         output = eval(result, safe_environment, {})
 
         # Validate that the evaluated output is actually a NumPy array
-        if isinstance(output, np.ndarray) and output.ndim==1 and output.dtype.kind in 'iuf':
+        if isinstance(output, np.ndarray) and output.ndim == 1 and output.dtype.kind in 'iuf':
             return True
     except (SyntaxError, NameError, TypeError, ValueError):
         pass
