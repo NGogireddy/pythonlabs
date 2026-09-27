@@ -64,8 +64,9 @@ def transform_vectors(matrix, vectors):
         if is_compatible(matrix.shape, vectors.shape):
             if len(vectors.shape) == 1:
                 yield matrix @ vectors
-            for vector in vectors:
-                yield matrix @ vector
+            else:
+                for vector in vectors:
+                    yield matrix @ vector
 
 
 def collect_transformed_vectors(matrix=np.empty([0]), vectors=np.empty([0])):
