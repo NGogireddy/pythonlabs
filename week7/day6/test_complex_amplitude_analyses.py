@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from complex_amplitude_analyses import complex_analyses
+from complex_amplitude_analyses import complex_analysis
 
 
 @pytest.mark.parametrize("values", [
@@ -10,7 +10,7 @@ from complex_amplitude_analyses import complex_analyses
 ])
 def test_invalid_inputs(values):
     with pytest.raises(TypeError):
-        complex_analyses(values)
+        complex_analysis(values)
 
 
 @pytest.mark.parametrize("values, expected_output", [
@@ -22,10 +22,10 @@ def test_invalid_inputs(values):
                           'probabilities': np.array([0.14792899, 0.8047337, 0.047337])}),
     (np.empty(0, dtype=complex), {'magnitudes': np.empty(0, dtype=float),
                'normalised_vector': np.empty(0, dtype=complex),
-               'probabilities': np.empty(0, dtype=complex)}),
+               'probabilities': list()}),
 ])
 def test_valid_inputs(values, expected_output):
-    result = complex_analyses(values)
+    result = complex_analysis(values)
     np.testing.assert_allclose(result['magnitudes'], expected_output['magnitudes'], atol=1e-3)
     np.testing.assert_allclose(result['normalised_vector'], expected_output['normalised_vector'], atol=1e-3)
     np.testing.assert_allclose(result['probabilities'], expected_output['probabilities'], atol=1e-3)

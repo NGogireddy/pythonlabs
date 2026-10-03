@@ -13,7 +13,7 @@ The only valid dtype of the vector is complex. Plain integers or floating point 
 however normalising them will return 1 for every element, hence these input types are not valid in this scope.   
 
 -   empty input
-If the input is an empty 1D vector of dtype complex then it will return empty 1D vector of dtype complex.  
+If the input is an empty 1D vector of dtype complex then it will raise TypeError.  
 
 -   output type
 Output is a 1D np array of dtype complex numbers. 
@@ -46,6 +46,24 @@ def normalized_vector(values):
             return values
         else:
             return values/math.sqrt(sum)
+    else:
+        raise TypeError
+
+
+def normalize_vector(values):
+    """
+    A better implementation of previous function
+    :param values: 1D np array of complex vectors
+    :return: 1D np array of complex vectors
+    """
+    if isinstance(values, np.ndarray) and values.dtype == 'complex128' and values.ndim == 1 and values.size > 0:
+        # 1. Calculate the L2 norm (magnitude)
+        norm = np.linalg.norm(values)
+
+        # 2. Divide to get the unit vector (safely checking for zero vectors)
+        v_normalized = values / norm if norm > 0 else values
+
+        return v_normalized
     else:
         raise TypeError
 
