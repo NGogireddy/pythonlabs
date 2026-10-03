@@ -29,7 +29,7 @@ def test_complex_phase_invalid_inputs(value):
 ])
 def test_complex_phase_valid_inputs(value, expected_output):
     result = complex_phase(value)
-    math.isclose(result, expected_output)
+    assert math.isclose(result, expected_output)
 
 
 def test_complex_phase_polar_input():
@@ -41,4 +41,4 @@ def test_complex_phase_polar_input():
     z = cmath.rect(r, theta)
 
     result = complex_phase(z)
-    math.isclose(result, 53.13)
+    assert math.isclose(result, 53.13)

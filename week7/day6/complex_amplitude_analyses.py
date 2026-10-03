@@ -1,10 +1,11 @@
 import numpy as np
 
 
-def complex_analyses(values):
+def complex_analysis(values):
     """
-    a small numerical component that represents and analyses a set of complex amplitudes.
-    If values is empty nd array it returns empty dictionary
+    a small numerical component that represents and analysis a set of complex amplitudes.
+    If values is empty nd array it returns default summary dictionary with empty values.
+    For zero vectors, it returns the same vector
     If it is not a valid 1D np array of complex number it raises TypeError exception.
     :param values: 1D NumPy array of complex amplitudes
     :return: dictionary of summary
@@ -12,7 +13,7 @@ def complex_analyses(values):
     # Initialize summary
     summary = {'magnitudes': np.empty(0, dtype=float),
                'normalised_vector': np.empty(0, dtype=complex),
-               'probabilities': np.empty(0, dtype=complex)}
+               'probabilities': list()}
 
     if isinstance(values, np.ndarray) and np.isdtype(values.dtype, 'complex floating') and values.ndim == 1:
         if values.size > 0:
@@ -40,7 +41,7 @@ def format_summary(summary):
 
 
 def process_vectors(values = np.empty(0, dtype=complex)):
-    summ = complex_analyses(values)
+    summ = complex_analysis(values)
     format_summary(summ)
 
 
