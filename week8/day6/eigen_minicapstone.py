@@ -29,12 +29,21 @@ Summary: Print a summary of the vectors before and after transformation.
 """
 
 
-def generate_transformation_matrix():
-    return np.random.rand(2, 2)
+def generate_transformation_matrix(n=2):
+    if isinstance(n, int) and n >= 2:
+        return np.random.rand(n, n)
+    raise ValueError
 
 
-def generate_n_sample_vectors(n=2):
-    return np.random.rand(n, 2)
+def generate_n_sample_vectors(n=2, m=2):
+    """
+    :param n: Number of sample vectors needed
+    :param m: number of dimensions in each vector
+    :return:
+    """
+    if isinstance(n, int) and isinstance(m, int) and n>=2 and m>=2:
+        return np.random.rand(n, m)
+    raise ValueError
 
 
 def is_valid_transformation_matrix(mat):
@@ -44,6 +53,10 @@ def is_valid_transformation_matrix(mat):
     :return:
     """
     return not (np.linalg.det(mat) == 0)
+
+
+def is_transformation_possible(matrix, vectors):
+    return matrix.shape[0] == vectors.shape[1]
 
 
 def transform_vectors(mat, vectors):
@@ -102,21 +115,33 @@ def plot_vectors(orig, transformed):
 def simulation_steps():
     matrix = generate_transformation_matrix()
     if is_valid_transformation_matrix(matrix):
-        vectors = generate_n_sample_vectors(3)
+        vectors = generate_n_sample_vectors(3, 2)
         print("Transformation Matrix is : ")
         print(matrix)
         print("Original vectors are : ")
         print(vectors)
-        transformed_vectors = transform_vectors(matrix, vectors)
-        print("Transformed vectors are : ")
-        print(transformed_vectors)
-        eig_values, eig_vectors = get_eigen_values_and_vectors(matrix)
-        print("Eigen values : ")
-        print(eig_values)
-        print("Eigen vectors : ")
-        print(eig_vectors)
-        plot_vectors(vectors, transformed_vectors)
+        if is_transformation_possible(matrix, vectors):
+            transformed_vectors = transform_vectors(matrix, vectors)
+            print("Transformed vectors are : ")
+            print(transformed_vectors)
+            eig_values, eig_vectors = get_eigen_values_and_vectors(matrix)
+            print("Eigen values : ")
+            print(eig_values)
+            print("Eigen vectors : ")
+            print(eig_vectors)
+            plot_vectors(vectors, transformed_vectors)
 
 
 if __name__ == '__main__':
     simulation_steps()
+
+"""
+Reflection: 
+On Day6 the code is done with barebones i.e, to work with default matrix of 2*2. On Day7, the code has been modified to 
+add a parameter for the shape of the matrix i.e, should it be 3*3 or 4*4. The validations and exceptions raised are all
+done on Day7. 
+
+The final project will do all the calculations properly, but the plot has not been adjusted due to time constraint. 
+More over plotting a graph for any matrix of shape 4*4 and beyond is not realistic. The above plotting code should work 
+for a 2*2 matrix. 
+"""
