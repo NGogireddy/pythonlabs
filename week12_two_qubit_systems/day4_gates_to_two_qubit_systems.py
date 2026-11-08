@@ -16,6 +16,9 @@ H_second = np.kron(I, H)    # Extending single gate Hadamard to apply on the sec
 
 result_first = H_first @ state_00
 result_second = H_second @ state_00
+print(result_first)
+print(result_second)
+print("")
 
 result = H_second @ state_01
 probabilities = np.abs(result) ** 2
