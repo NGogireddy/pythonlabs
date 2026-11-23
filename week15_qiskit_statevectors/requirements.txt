@@ -1,0 +1,4 @@
+qiskit==2.6.2
+qiskit-aer==0.18.2
+numpy==2.5.5
+pytest==9.2.0
