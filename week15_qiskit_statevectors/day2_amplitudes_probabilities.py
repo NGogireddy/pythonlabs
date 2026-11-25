@@ -70,3 +70,14 @@ print("\nProbabilities after H on both qubits:")
 print("Circuit A:", final_state_a.probabilities())
 print("Circuit B:", final_state_b.probabilities())
 
+# Sample measurement outcomes
+measurement_counts = state.sample_counts(shots=1000)
+
+print("\nMeasurement counts:")
+print(measurement_counts)
+
+# Calculate total shots
+total_shots = sum(measurement_counts.values())
+
+print("\nTotal shots:")
+print(total_shots)
